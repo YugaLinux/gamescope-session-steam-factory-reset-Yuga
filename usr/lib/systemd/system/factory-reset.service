@@ -1,0 +1,13 @@
+[Unit]
+Description=Factory Reset
+After=local-fs.target
+Before=first-boot-complete.target
+Wants=first-boot-complete.target.wants
+ConditionFirstBoot=yes
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/gamescope-session-steam/factory-reset
+
+[Install]
+WantedBy=first-boot-complete.target

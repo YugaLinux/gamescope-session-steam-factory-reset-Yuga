@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+rm -rf /boot/efi/*
+rm -rf /boot/efi/.* || true
+cp -r /.snapshots/.fr/bfr/efi/* /boot/efi/
+cp -r /.snapshots/.fr/bfr/efi/.* /boot/efi/ || true
+btrfs subvolume set-default /.snapshots/.fr/snapshot

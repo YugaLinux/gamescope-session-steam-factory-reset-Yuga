@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+
+if [ ! -f "/.factory_reset" ]; then
+    exit 0
+fi
+
+directories=(home opt root srv var)
+
+rootsource=$(findmnt / -n --output source | sed 's/\[.*\]//g')
+mount -t btrfs -o subvol=/ $rootsource /mnt
+
+for dir in "${directories[@]}"
+do
+  btrfs subvolume delete /mnt/@/$dir
+  btrfs subvolume snapshot /mnt/@/.${dir}ori /mnt/@/${dir}
+done
+btrfs subvolume delete /mnt/@/usr/local
+btrfs subvolume snapshot /mnt/@/usr/.localori /mnt/@/usr/local
+
+btrfs subvolume set-default /.snapshots/.fr/snapshot
+snapshots_to_delete=$(snapper list --disable-used-space --columns=number | awk '$1 ~ /^[0-9]+$/ {print $1}')
+for snapshot in $snapshots_to_delete; do
+    echo "Deleting snapshot: $snapshot"
+    snapper delete "$snapshot"
+done
+
+mkdir /.snapshots/1
+btrfs subvolume snapshot -r /.snapshots/.ori/snapshot /.snapshots/1/snapshot
+cp /.snapshots/.ori/info.xml /.snapshots/1/info.xml
+btrfs subvolume set-default /.snapshots/1/snapshot
+
+rm -rf /boot/efi/*
+rm -rf /boot/efi/.* || true
+cp -r /.snapshots/.fr/bori/efi/* /boot/efi/
+cp -r /.snapshots/.fr/bori/efi/.* /boot/efi/ || true
+
+umount /mnt
+systemctl reboot
