@@ -12,7 +12,7 @@
       <allow_inactive>auth_admin</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-factory-reset-config</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/gamescope-session-steam/system-factory-reset-config</annotate>
   </action>
 
 </policyconfig>

@@ -1,2 +1,2 @@
-# gamescope-session-steam-factory-reset-config-Yuga
-Factory reset config for Yuga Linux
+# gamescope-session-steam-factory-reset-Yuga
+The factory reset scripts and configs for Yuga Linux

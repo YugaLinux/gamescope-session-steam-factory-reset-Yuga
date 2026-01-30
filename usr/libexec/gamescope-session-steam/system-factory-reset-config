@@ -1,5 +1,10 @@
 #!/usr/bin/bash
 
+if [[ $EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "$0" "$@"
+fi
+
 rm -rf /boot/efi/*
 rm -rf /boot/efi/.* || true
 cp -r /.snapshots/.fr/bfr/efi/* /boot/efi/
